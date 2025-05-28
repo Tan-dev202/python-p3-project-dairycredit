@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from faker import Faker
@@ -45,7 +43,7 @@ if __name__ == '__main__':
     )
 
     print(
-        f"Created a new farmer: {farmer.name} with credit score: {record.credit_score:.2f}")
+        f"Added a new farmer: {farmer.name} with credit score: {record.credit_score:.2f}")
 
     records = Record.get_all(session)
 
