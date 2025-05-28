@@ -21,7 +21,7 @@ os.makedirs(os.path.dirname(sqlite_path), exist_ok=True)
 config.set_main_option("sqlalchemy.url", f"sqlite:///{sqlite_path}")
 
 # Import your models here and set metadata
-from models import Base
+from models.__init__ import Base
 target_metadata = Base.metadata
 
 def run_migrations_offline() -> None:

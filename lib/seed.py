@@ -1,6 +1,10 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models import Base, Farmer, Record, Lender, Rating
+from models.__init__ import Base
+from models.farmer import Farmer
+from models.lender import Lender
+from models.rating import Rating
+from models.record import Record
 from faker import Faker
 from random import choice
 
