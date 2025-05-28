@@ -66,7 +66,8 @@ if __name__ == '__main__':
     session.commit()
 
     lender_names = ['Equity Bank', 'ABSA Bank', 'KCB Bank', 'Family Bank']
-    lenders = [Lender(name=name) for name in lender_names]
+    lenders = [Lender.create(name=name, session=session)
+               for name in lender_names]
     session.add_all(lenders)
     session.commit()
 
