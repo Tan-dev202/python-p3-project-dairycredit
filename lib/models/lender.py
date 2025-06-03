@@ -26,6 +26,15 @@ class Lender(Base):
         session.add(lender)
         session.commit()
         return lender
+
+    def update(self, session, name=None):
+        if name is not None:
+            if not name or len(name) < 3:
+                raise ValueError("Lender name must be at least 3 characters long")
+            self.name = name
+        
+        session.commit()
+        return self
     
     @classmethod
     def get_all(cls, session):
@@ -36,8 +45,8 @@ class Lender(Base):
         return session.query(cls).filter(cls.id == lender_id).first()
     
     @classmethod
-    def find_by_name(cls, session):
-        return session.query(cls).filter(cls.name).all()
+    def find_by_name(cls, name, session):
+        return session.query(cls).filter(cls.name.like(f'%{name}%')).all()
     
     def delete(self, session):
         session.delete(self)

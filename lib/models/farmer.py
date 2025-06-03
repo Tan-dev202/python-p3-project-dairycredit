@@ -38,6 +38,20 @@ class Farmer(Base):
         session.commit()
         return farmer
 
+    def update(self, session, name=None, location=None):
+        if name is not None:
+            if not name or len(name) < 3:
+                raise ValueError("Name must be at least 3 characters long")
+            self.name = name
+
+        if location is not None:
+            if not location or len(location) < 3:
+                raise ValueError("Location must be at least 3 characters long")
+            self.location = location
+
+        session.commit()
+        return self
+
     @classmethod
     def get_all(cls, session):
         return session.query(cls).all()
@@ -47,12 +61,12 @@ class Farmer(Base):
         return session.query(cls).filter(cls.id == farmer_id).first()
 
     @classmethod
-    def find_by_name(cls, session):
-        return session.query(cls).filter(cls.name).all()
+    def find_by_name(cls, name, session):
+        return session.query(cls).filter(cls.name.like(f'%{name}%')).all()
 
     @classmethod
-    def find_by_location(cls, session):
-        return session.query(cls).filter(cls.location).all()
+    def find_by_location(cls, location, session):
+        return session.query(cls).filter(cls.location.like(f'%{location}%')).all()
 
     def delete(self, session):
         session.delete(self)

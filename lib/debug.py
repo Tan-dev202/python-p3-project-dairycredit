@@ -18,7 +18,7 @@ if __name__ == '__main__':
     ratings = Rating.get_all(session)
     records = Record.get_all(session)
 
-    print("-----Testing DairyCredit App-----")
+    print("-----Testing DairyCredit App with UPDATE functionality-----")
 
     print(f"Total Farmers: {len(farmers)}")
     print(f"Total Lenders: {len(lenders)}")
@@ -42,14 +42,24 @@ if __name__ == '__main__':
         session=session
     )
 
-    print(
-        f"Added a new farmer: {farmer.name} with credit score: {record.credit_score:.2f}")
+    print(f"Added a new farmer: {farmer.name} with credit score: {record.credit_score:.2f}")
+
+    print("\n--- Updating Farmers ---")
+
+    old_name = farmer.name
+    farmer.update(session, name="Updated " + old_name, location="Updated Location")
+    print(f"Updated farmer name from '{old_name}' to '{farmer.name}'")
+
+    old_sales = record.current_sales
+    old_score = record.credit_score
+    record.update(session, current_sales=old_sales + 10000, asset_value=record.asset_value + 50000)
+    print(f"Updated record sales from {old_sales} to {record.current_sales}")
+    print(f"Credit score changed from {old_score:.2f} to {record.credit_score:.2f}")
 
     records = Record.get_all(session)
-
     scores = [record.credit_score for record in records if record.credit_score]
     if scores:
-        print(f"Average credit score: {sum(scores)/len(scores):.2f}")
+        print(f"\nAverage credit score: {sum(scores)/len(scores):.2f}")
         print(f"Highest credit score: {max(scores):.2f}")
         print(f"Lowest credit score: {min(scores):.2f}")
 

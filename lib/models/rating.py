@@ -43,6 +43,15 @@ class Rating(Base):
         session.add(entries)
         session.commit()
         return entries
+
+    def update(self, session, rating=None):
+        if rating is not None:
+            if not (1 <= rating <= 10):
+                raise ValueError("Rating must be between 1 and 10")
+            self.rating = rating
+        
+        session.commit()
+        return self
     
     @classmethod
     def get_all(cls, session):

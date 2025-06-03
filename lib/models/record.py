@@ -20,19 +20,19 @@ class Record(Base):
 
     def __repr__(self):
         return f"<Record(id={self.id}, farmer_id={self.farmer_id}, credit_score={self.credit_score:.2f})>"
-    
+
     @property
     def sales(self):
         return self.current_sales >= 0 if self.current_sales else False
-    
+
     @property
     def costs(self):
         return self.current_costs >= 0 if self.current_costs else False
-    
+
     @property
     def liabilities(self):
         return self.current_liabilities >= 0 if self.current_liabilities else False
-    
+
     @property
     def assets(self):
         return self.asset_value > 0 if self.asset_value else False
@@ -51,7 +51,7 @@ class Record(Base):
 
     @classmethod
     def create(cls, farmer_id, current_sales, current_costs, current_liabilities, asset_value, session):
-        
+
         if current_sales < 0:
             raise ValueError("Sales must be at least zero")
         if current_costs < 0:
@@ -60,7 +60,7 @@ class Record(Base):
             raise ValueError("Liabilities must be at least zero")
         if asset_value <= 0:
             raise ValueError("Asset value must be greater than zero")
-        
+
         from models.farmer import Farmer
         farmer = session.query(Farmer).filter(Farmer.id == farmer_id).first()
         if not farmer:
@@ -78,19 +78,45 @@ class Record(Base):
         session.add(record)
         session.commit()
         return record
-    
+
+    def update(self, session, current_sales=None, current_costs=None,
+               current_liabilities=None, asset_value=None):
+        if current_sales is not None:
+            if current_sales < 0:
+                raise ValueError("Sales must be at least zero")
+            self.current_sales = current_sales
+
+        if current_costs is not None:
+            if current_costs < 0:
+                raise ValueError("Costs must be at least zero")
+            self.current_costs = current_costs
+
+        if current_liabilities is not None:
+            if current_liabilities < 0:
+                raise ValueError("Liabilities must be at least zero")
+            self.current_liabilities = current_liabilities
+
+        if asset_value is not None:
+            if asset_value <= 0:
+                raise ValueError("Asset value must be greater than zero")
+            self.asset_value = asset_value
+        self.credit_score = self.calculate_credit_score()
+
+        session.commit()
+        return self
+
     @classmethod
     def get_all(cls, session):
         return session.query(cls).all()
-    
+
     @classmethod
     def find_by_id(cls, record_id, session):
         return session.query(cls).filter(cls.id == record_id).first()
-    
+
     @classmethod
     def find_by_farmer_id(cls, farmer_id, session):
         return session.query(cls).filter(cls.farmer_id == farmer_id).all()
-    
+
     def delete(self, session):
         session.delete(self)
         session.commit()

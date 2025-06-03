@@ -49,6 +49,10 @@ def show_ratings(ratings):
         farmer_name = rating.farmer.name if rating.farmer else "Not available"
         print(f"{rating.id:<5} {lender_name:<20} {farmer_name:<20} {rating.rating:<5}")
 
+def confirm_update(item_type, item_name):
+    response = input(
+        f"Update {item_type} '{item_name}'? (yes/no): ").lower()
+    return response == 'yes'
 
 def confirm_delete(item_type, item_name):
     response = input(
